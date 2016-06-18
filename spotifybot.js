@@ -588,8 +588,9 @@ function checkForTrackChange() {
       
       // push the track into our queue
       trackQueue.push(track.id);
-      // send a message on the first song or the 10th song
-      if (trackQueue.length == 1 || trackQueue.length % 10 == 0) {
+      // send a message on every song unless an interval option is set
+      var interval = setup.interval || 1;
+      if (trackQueue.length == 1 || trackQueue.length % interval == 0) {
         getArtworkUrlFromTrack(track, function(artworkUrl) {
           bot.say({
             text: 'Now playing: ' + trackFormatSimple(track) + '\n' + artworkUrl,
