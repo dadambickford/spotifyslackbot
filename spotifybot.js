@@ -593,7 +593,7 @@ function checkForTrackChange() {
       if (trackQueue.length == 1 || trackQueue.length % interval == 0) {
         getArtworkUrlFromTrack(track, function(artworkUrl) {
           bot.say({
-            text: 'Now playing: ' + trackFormatSimple(track) + '\n' + artworkUrl,
+            text: 'Now playing: ' + trackFormatSimple(track) + '\n' + artworkUrl + '\n' + getSongUrl(track),
             channel: channelId
           });
         });
@@ -751,6 +751,11 @@ var trackFormatSimple = function trackFormatSimple(track) {
 var trackFormatDetail = function trackFormatDetail(track) {
   return '_' + track.name + '_ by _' + track.artist + '_ is from the album *' + track.album + '*';
 };
+
+var getSongUrl = function (track) {
+  var urlId = track.id.split(':')[2];
+  return 'https://open.spotify.com/track/' + urlId;
+}
 
 var getArtworkUrlFromTrack = function getArtworkUrlFromTrack(track, callback) {
   var trackId = track.id.split(':')[2];
