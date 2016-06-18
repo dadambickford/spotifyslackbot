@@ -578,19 +578,25 @@ function checkRepeating() {
   return deferred.promise;
 }
 
+// array to cache track.id
+var trackQueue = [];
 function checkForTrackChange() {
   Spotify.getTrack(function(err, track) {
-    if (track && track.id !== lastTrackId) {
+    // if we get a track back and the track is diff from the last trach in cache
+    if (track && track.id !== trackQueue[trackQueue.length - 1]) {
       if (!channelId) return;
-
-      lastTrackId = track.id;
-
-      getArtworkUrlFromTrack(track, function(artworkUrl) {
-        bot.say({
-          text: 'Now playing: ' + trackFormatSimple(track) + '\n' + artworkUrl,
-          channel: channelId
+      
+      // push the track into our queue
+      trackQueue.push(track.id);
+      // send a message on the first song or the 10th song
+      if (trackQueue.length == 1 || trackQueue.length % 10 == 0) {
+        getArtworkUrlFromTrack(track, function(artworkUrl) {
+          bot.say({
+            text: 'Now playing: ' + trackFormatSimple(track) + '\n' + artworkUrl,
+            channel: channelId
+          });
         });
-      });
+      }
     }
   });
 }
